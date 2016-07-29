@@ -1,6 +1,6 @@
-#!/binsh
+#!/bin/sh
 
-sleep 10
+sleep 15
 
 mongo --host mongo-rc0svr1 <<EOF
   rs.initiate({
@@ -27,6 +27,8 @@ mongo --host mongo-rc0svr1 <<EOF
     ]
   });
 EOF
+
+sleep 15
 
 mongo --host mongos <<EOF
   sh.addShard("rc0/mongo-rc0svr1");

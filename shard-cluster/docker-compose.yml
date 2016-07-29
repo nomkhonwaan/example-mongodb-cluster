@@ -21,24 +21,22 @@ services:
     image: 'mongo:latest'
     volumes_from:
       - 'data'
-    command: 'mongod --dbpath /mongo-rc0svr1 --replSet rc0 --shardsvr --smallfiles'
+    command: 'mongod --dbpath /mongo-rc0svr1 --port 27017 --replSet rc0 --shardsvr --smallfiles'
   mongo-rc0svr2:
     image: 'mongo:latest'
     volumes_from:
       - 'data'
-    command: 'mongod --dbpath /mongo-rc0svr2 --replSet rc0 --shardsvr --smallfiles'
+    command: 'mongod --dbpath /mongo-rc0svr2 --port 27017 --replSet rc0 --shardsvr --smallfiles'
   mongo-rc0svr3:
     image: 'mongo:latest'
     volumes_from:
       - 'data'
-    command: 'mongod --dbpath /mongo-rc0svr3 --replSet rc0 --shardsvr --smallfiles'
+    command: 'mongod --dbpath /mongo-rc0svr3 --port 27017 --replSet rc0 --shardsvr --smallfiles'
 
   mongos:
     image: 'mongo:latest'
     depends_on:
-      - 'mongo-rc0svr1'
-      - 'mongo-rc0svr2'
-      - 'mongo-rc0svr3'
+      - 'mongo-config'
     command: 'mongos --configdb mongo-config'
     links:
       - 'mongo-config:mongo-config'
@@ -47,6 +45,9 @@ services:
     image: 'mongo:latest'
     depends_on:
       - 'mongos'
+      - 'mongo-rc0svr1'
+      - 'mongo-rc0svr2'
+      - 'mongo-rc0svr3'
     volumes_from:
       - 'data'
     entrypoint: '/setup/entrypoint.sh'
