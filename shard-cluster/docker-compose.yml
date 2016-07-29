@@ -1,0 +1,64 @@
+version: '2'
+services:
+
+  data:
+    image: 'alpine:latest'
+    volumes:
+      - '$PWD/scripts/setup:/setup'
+      - '$PWD/../.tmp/shard-cluster/mongo-config:/mongo-config'
+      - '$PWD/../.tmp/shard-cluster/mongo-rc0svr1:/mongo-rc0svr1'
+      - '$PWD/../.tmp/shard-cluster/mongo-rc0svr2:/mongo-rc0svr2'
+      - '$PWD/../.tmp/shard-cluster/mongo-rc0svr3:/mongo-rc0svr3'
+    command: '/bin/true'
+
+  mongo-config:
+    image: 'mongo:latest'
+    volumes_from:
+      - 'data'
+    command: 'mongod --dbpath /mongo-config --configsvr'
+
+  mongo-rc0svr1:
+    image: 'mongo:latest'
+    volumes_from:
+      - 'data'
+    command: 'mongod --dbpath /mongo-rc0svr1 --replSet rc0 --shardsvr --smallfiles'
+  mongo-rc0svr2:
+    image: 'mongo:latest'
+    volumes_from:
+      - 'data'
+    command: 'mongod --dbpath /mongo-rc0svr2 --replSet rc0 --shardsvr --smallfiles'
+  mongo-rc0svr3:
+    image: 'mongo:latest'
+    volumes_from:
+      - 'data'
+    command: 'mongod --dbpath /mongo-rc0svr3 --replSet rc0 --shardsvr --smallfiles'
+
+  mongos:
+    image: 'mongo:latest'
+    depends_on:
+      - 'mongo-rc0svr1'
+      - 'mongo-rc0svr2'
+      - 'mongo-rc0svr3'
+    command: 'mongos --configdb mongo-config'
+    links:
+      - 'mongo-config:mongo-config'
+
+  setup:
+    image: 'mongo:latest'
+    depends_on:
+      - 'mongos'
+    volumes_from:
+      - 'data'
+    entrypoint: '/setup/entrypoint.sh'
+    links:
+      - 'mongos:mongos'
+      - 'mongo-rc0svr1:mongo-rc0svr1'
+      - 'mongo-rc0svr2:mongo-rc0svr2'
+      - 'mongo-rc0svr3:mongo-rc0svr3'
+
+  # mongoclient:
+  #   image: 'mongoclient/mongoclient:latest'
+  #   ports:
+  #     - '3000:3000'
+  #   links:
+  #     - 'mongos:mongos'
