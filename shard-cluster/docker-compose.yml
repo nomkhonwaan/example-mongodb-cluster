@@ -57,9 +57,9 @@ services:
       - 'mongo-rc0svr2:mongo-rc0svr2'
       - 'mongo-rc0svr3:mongo-rc0svr3'
 
-  # mongoclient:
-  #   image: 'mongoclient/mongoclient:latest'
-  #   ports:
-  #     - '3000:3000'
-  #   links:
-  #     - 'mongos:mongos'
+  mongoclient:
+    image: 'mongoclient/mongoclient:latest'
+    ports:
+      - '3000:3000'
+    links:
+      - 'mongos:mongos'
