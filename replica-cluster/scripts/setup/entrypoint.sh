@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 10
+sleep 15
 
 mongo --host mongo-rc0svr1 <<EOF
   rs.initiate({
@@ -28,7 +28,10 @@ mongo --host mongo-rc0svr1 <<EOF
   });
 EOF
 
+sleep 15
+
 mongo --host mongo-rc0svr1 <<EOF
+  rs.slaveOk();
   use test;
   db.users.insert({
     "first_name": "Natcha",
