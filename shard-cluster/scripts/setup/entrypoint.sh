@@ -93,9 +93,9 @@ sh.addShard("cluster1-shard0/cluster1-shard0-0:27018");
 EOF
 
 mongo --host mongos <<EOF
+use test;
 sh.enableSharding("test")
 
-use test;
 db.users.insert({ "hello0": "world!" });
 db.users.insert({ "hello1": "world!" });
 db.users.insert({ "hello2": "world!" });

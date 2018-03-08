@@ -43,6 +43,8 @@ services:
     links:
     - config0:config0
     - config1:config1
+    ports:
+    - 27017:27017
 
   setup:
     image: mongo:latest
