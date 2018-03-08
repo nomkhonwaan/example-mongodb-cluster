@@ -96,14 +96,5 @@ mongo --host mongos <<EOF
 use test;
 sh.enableSharding("test")
 
-db.users.insert({ "hello0": "world!" });
-db.users.insert({ "hello1": "world!" });
-db.users.insert({ "hello2": "world!" });
-db.users.insert({ "hello3": "world!" });
-db.users.insert({ "hello4": "world!" });
-db.users.insert({ "hello5": "world!" });
-db.users.insert({ "hello6": "world!" });
-db.users.insert({ "hello7": "world!" });
-db.users.insert({ "hello8": "world!" });
-db.users.insert({ "hello9": "world!" });
+db.users.insert({ "hello": "world!" });
 EOF
