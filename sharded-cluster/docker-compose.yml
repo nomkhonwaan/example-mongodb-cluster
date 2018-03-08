@@ -4,15 +4,9 @@ services:
   config0:
     image: mongo:latest
     command: mongod --replSet config --configsvr
-    links:
-    - cluster0-shard0-0:cluster0-shard0-0
-    - cluster1-shard0-0:cluster1-shard0-0
   config1:
     image: mongo:latest
     command: mongod --replSet config --configsvr
-    links:
-    - cluster0-shard0-0:cluster0-shard0-0
-    - cluster1-shard0-0:cluster1-shard0-0
 
   cluster0-shard0-0:
     image: mongo:latest
@@ -40,9 +34,6 @@ services:
     - config0
     - config1
     command: mongos --configdb config/config0,config1 --bind_ip_all
-    links:
-    - config0:config0
-    - config1:config1
     ports:
     - 27017:27017
 
@@ -59,16 +50,7 @@ services:
     - cluster1-shard0-1
     - cluster1-shard0-2
     volumes:
-    - $PWD/scripts/setup:/setup
-    entrypoint: /setup/entrypoint.sh
+    - $PWD/docker-entrypoint.sh:/docker-entrypoint.sh
+    entrypoint: /docker-entrypoint.sh
     links:
-    - config0:config0
-    - config1:config1
     - mongos:mongos
-    - cluster0-shard0-0:cluster0-shard0-0
-    - cluster0-shard0-1:cluster0-shard0-1
-    - cluster0-shard0-2:cluster0-shard0-2
-    - cluster1-shard0-0:cluster1-shard0-0
-    - cluster1-shard0-1:cluster1-shard0-1
-    - cluster1-shard0-2:cluster1-shard0-2
-  

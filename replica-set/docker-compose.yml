@@ -4,12 +4,18 @@ services:
   cluster0-0:
     image: mongo:latest
     command: mongod --replSet cluster0 --smallfiles
+    ports:
+    - 27017:27017
   cluster0-1:
     image: mongo:latest
     command: mongod --replSet cluster0 --smallfiles
+    ports:
+    - 27018:27017
   cluster0-2:
     image: mongo:latest
     command: mongod --replSet cluster0 --smallfiles
+    ports:
+    - 27019:27017
 
   setup:
     image: mongo:latest
@@ -18,9 +24,5 @@ services:
       - cluster0-1
       - cluster0-2
     volumes:
-    - $PWD/scripts/setup:/setup
-    entrypoint: /setup/entrypoint.sh
-    links:
-      - cluster0-0:cluster0-0
-      - cluster0-1:cluster0-1
-      - cluster0-2:cluster0-2
+    - $PWD/docker-entrypoint.sh:/docker-entrypoint.sh
+    entrypoint: /docker-entrypoint.sh
